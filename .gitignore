@@ -1,0 +1,26 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+
+# codebot index files
+.codebot.db
+.codebot.db-shm
+.codebot.db-wal
+.codebot.chain_cache.json
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
