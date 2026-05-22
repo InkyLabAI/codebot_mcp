@@ -131,8 +131,10 @@ def _find_roots(chain_index):
 
     roots = [fid for fid in chain_ids if in_degree[fid] == 0]
     if not roots:
-        best = max(chain_index.values(), key=lambda r: r.similarity)
-        roots = [best.function.function_id]
+        roots = [max(chain_index, key=lambda fid: chain_index[fid].similarity)]
+    # Deterministic order: highest similarity first so both search and
+    # search-tree traverse the same root sequence and produce consistent output.
+    roots.sort(key=lambda fid: -chain_index[fid].similarity)
     return roots
 
 
