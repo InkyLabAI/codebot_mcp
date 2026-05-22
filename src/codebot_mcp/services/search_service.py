@@ -48,8 +48,15 @@ def _summarize_communities(community_data: list[dict]) -> str:
 # ---------------------------------------------------------------------------
 # Test-exclusion patterns (same as backend)
 # ---------------------------------------------------------------------------
-_TEST_FILE_RE = re.compile(r'(^|/)tests?/|/test_[^/]*$|_test\.py$')
-_TEST_FUNC_RE = re.compile(r'^test_|\.test_|\.Test[A-Z]')
+_TEST_FILE_RE = re.compile(
+    r'(^|/)tests?/'
+    r'|(^|/)test_[^/]+/'
+    r'|/test_[^/]*\.py$'
+    r'|_test\.py$'
+    r'|(^|/)conftest\.py$',
+    re.IGNORECASE,
+)
+_TEST_FUNC_RE = re.compile(r'^test_|\.test_|\.Test[A-Z]', re.IGNORECASE)
 
 
 def _is_test_function(func: Function) -> bool:

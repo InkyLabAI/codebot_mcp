@@ -23,8 +23,15 @@ from codebot_mcp.db import Function, Repository
 import logging
 logger = logging.getLogger(__name__)
 
-_TEST_FILE_RE = re.compile(r'(^|/)tests?/|/test_[^/]*$|_test\.py$', re.IGNORECASE)
-_TEST_ID_RE   = re.compile(r'^test\.|\.test_|\.Test[A-Z]|^test_', re.IGNORECASE)
+_TEST_FILE_RE = re.compile(
+    r'(^|/)tests?/'          # directory named test/ or tests/
+    r'|(^|/)test_[^/]+/'     # directory whose name starts with test_ (e.g. test_unstructured/)
+    r'|/test_[^/]*\.py$'     # filename starting with test_ (e.g. test_base.py)
+    r'|_test\.py$'           # filename ending with _test.py
+    r'|(^|/)conftest\.py$',  # pytest conftest files
+    re.IGNORECASE,
+)
+_TEST_ID_RE = re.compile(r'^test\.|\.test_|\.Test[A-Z]|^test_', re.IGNORECASE)
 
 
 def _is_test_function(file_path: str, function_id: str) -> bool:
