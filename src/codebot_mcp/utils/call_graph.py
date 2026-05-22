@@ -1151,13 +1151,15 @@ async def expand_adaptive_neighbors(
     # Callees of seeds
     for r in seed_results:
         for callee_id in (r.function.calls or []):
-            if callee_id in func_map and callee_id not in seed_ids:
+            func = func_map.get(callee_id)
+            if func and callee_id not in seed_ids and not _is_test_function(func.file_path, callee_id):
                 hop1_ids.add(callee_id)
 
     # Callers of seeds (via reverse index)
     for sid in seed_ids:
         for caller_id in reverse_callers.get(sid, set()):
-            if caller_id not in seed_ids:
+            func = func_map.get(caller_id)
+            if func and caller_id not in seed_ids and not _is_test_function(func.file_path, caller_id):
                 hop1_ids.add(caller_id)
 
     # --- Phase 2: 2nd hop from structurally close 1-hop neighbors ---
@@ -1174,12 +1176,14 @@ async def expand_adaptive_neighbors(
 
         # Callees of this structurally close neighbor
         for callee_id in (neighbor_func.calls or []):
-            if callee_id in func_map and callee_id not in already_included:
+            func = func_map.get(callee_id)
+            if func and callee_id not in already_included and not _is_test_function(func.file_path, callee_id):
                 hop2_ids.add(callee_id)
 
         # Callers of this structurally close neighbor
         for caller_id in reverse_callers.get(nid, set()):
-            if caller_id not in already_included:
+            func = func_map.get(caller_id)
+            if func and caller_id not in already_included and not _is_test_function(func.file_path, caller_id):
                 hop2_ids.add(caller_id)
 
     # --- Add all neighbors to result_map ---
